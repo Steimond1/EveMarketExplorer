@@ -86,6 +86,22 @@ public partial class MainWindow : Window
         viewModel.RememberSortBy(e.Column.SortMemberPath);
     }
 
+    private void LoopsGrid_Sorting(object? sender, DataGridColumnEventArgs e)
+    {
+        if (applyingStoredSort)
+        {
+            return;
+        }
+
+        if (DataContext is not MainWindowViewModel viewModel ||
+            string.IsNullOrWhiteSpace(e.Column.SortMemberPath))
+        {
+            return;
+        }
+
+        viewModel.RememberLoopSortBy(e.Column.SortMemberPath);
+    }
+
     private void ApplyGridSortGlyph(TableSortState sortState)
     {
         var direction = sortState.Descending

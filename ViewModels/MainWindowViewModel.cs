@@ -12,6 +12,7 @@ using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EveMarketExplorer.Models;
+using EveMarketExplorer.Services;
 
 namespace EveMarketExplorer.ViewModels;
 
@@ -28,8 +29,10 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private readonly HttpClient httpClient;
     private readonly EveCache cache;
+    private readonly EveEsiClient esi;
     private readonly MarketDataService marketData;
     private readonly TradeOpportunityFinder opportunityFinder;
+    private readonly TradeLoopFinder tradeLoopFinder;
     private readonly ContrabandDataSource contraband;
 
     private UniverseData? universe;
@@ -37,6 +40,8 @@ public partial class MainWindowViewModel : ViewModelBase
     private Task<CachedOrders>? cacheRefreshTask;
     private string currentSortMemberPath = "Profit";
     private bool currentSortDescending = true;
+    private string currentLoopSortMemberPath = "ProfitPerJump";
+    private bool currentLoopSortDescending = true;
     private bool restoredLastSearch;
 
     [ObservableProperty]
@@ -62,6 +67,13 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty]
     private decimal minimumProfit = 1_000_000m;
+
+    [ObservableProperty]
+    private int maxLoopStops = 2;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsTradeLoopsTabSelected))]
+    private int selectedTabIndex;
 
     [ObservableProperty]
     private string status = "Готово к расчету.";
@@ -112,13 +124,15 @@ public partial class MainWindowViewModel : ViewModelBase
         httpClient.DefaultRequestHeaders.Add("X-Compatibility-Date", CompatibilityDate);
 
         cache = new EveCache(GetCacheDirectory(), json);
-        var esi = new EveEsiClient(httpClient, json);
+        esi = new EveEsiClient(httpClient, json);
         marketData = new MarketDataService(esi, cache);
         opportunityFinder = new TradeOpportunityFinder(esi, cache);
+        tradeLoopFinder = new TradeLoopFinder(esi, cache);
         contraband = new ContrabandDataSource(httpClient, cache);
 
         SystemNames = new ObservableCollection<string>(LoadSystemNames());
         Opportunities = [];
+        TradeLoops = [];
         RestoreLastSearchState();
         _ = InitializeAsync();
     }
@@ -127,7 +141,13 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public ObservableCollection<TradeOpportunityRow> Opportunities { get; }
 
+    public ObservableCollection<TradeLoopRow> TradeLoops { get; }
+
     public TableSortState CurrentSortState => new(currentSortMemberPath, currentSortDescending);
+
+    public TableSortState CurrentLoopSortState => new(currentLoopSortMemberPath, currentLoopSortDescending);
+
+    public bool IsTradeLoopsTabSelected => SelectedTabIndex == 1;
 
     public TableSortState RememberSortBy(string sortMemberPath)
     {
@@ -145,7 +165,30 @@ public partial class MainWindowViewModel : ViewModelBase
         return CurrentSortState;
     }
 
+    public TableSortState RememberLoopSortBy(string sortMemberPath)
+    {
+        if (string.Equals(currentLoopSortMemberPath, sortMemberPath, StringComparison.Ordinal))
+        {
+            currentLoopSortDescending = !currentLoopSortDescending;
+        }
+        else
+        {
+            currentLoopSortMemberPath = sortMemberPath;
+            currentLoopSortDescending = false;
+        }
+
+        SaveLastSearchState();
+        return CurrentLoopSortState;
+    }
+
     [RelayCommand]
+    private Task Find()
+    {
+        return IsTradeLoopsTabSelected
+            ? FindTradeLoops()
+            : FindOpportunities();
+    }
+
     private async Task FindOpportunities()
     {
         try
@@ -214,6 +257,91 @@ public partial class MainWindowViewModel : ViewModelBase
             Status = Opportunities.Count == 0
                 ? "Подходящих сделок не найдено."
                 : $"Найдено сделок: {Opportunities.Count:N0}";
+            SearchProgressText = Status;
+            SaveLastSearchState();
+        }
+        catch (Exception ex)
+        {
+            Status = GetSearchErrorText(ex);
+            SearchProgressText = Status;
+        }
+        finally
+        {
+            IsSearchRunning = false;
+        }
+    }
+
+    private async Task FindTradeLoops()
+    {
+        try
+        {
+            IsSearchRunning = true;
+            IsLastResultWarningVisible = false;
+            LastResultWarning = "";
+            SearchProgressValue = 0;
+            SearchProgressText = "Готовлю данные для поиска торговых колец...";
+            Status = "Готовлю данные для поиска торговых колец...";
+
+            universe ??= await marketData.LoadUniverseAsync();
+            UpdateSystemNames(universe);
+            marketOrders ??= cacheRefreshTask is { IsCompletedSuccessfully: true }
+                ? cacheRefreshTask.Result
+                : await marketData.LoadMarketOrdersAsync(universe.Regions);
+
+            SolarSystem? startSystem = null;
+            if (!string.IsNullOrWhiteSpace(SystemName))
+            {
+                if (!universe.SystemsByName.TryGetValue(SystemName.Trim(), out var foundSystem))
+                {
+                    Status = $"Система не найдена: {SystemName}";
+                    SearchProgressText = Status;
+                    return;
+                }
+
+                startSystem = foundSystem;
+            }
+
+            var routeMode = SafeRoutes ? RouteMode.Safe : RouteMode.Risky;
+            var contrabandTypeIds = IncludeContraband
+                ? new HashSet<int>()
+                : await contraband.GetContrabandTypeIdsAsync();
+
+            Status = $"Ищу кольца до {MaxLoopStops} точек... Налог продажи: {TradeMath.GetSalesTaxRate(AccountingLevel):P2}";
+            var request = new TradeLoopSearchRequest(
+                startSystem,
+                Budget,
+                CargoVolume,
+                routeMode,
+                IncludeContraband,
+                AccountingLevel,
+                MinimumMargin,
+                MinimumProfit,
+                Math.Clamp(MaxLoopStops, 2, 4));
+
+            var progress = new Progress<TradeLoopSearchProgress>(value =>
+            {
+                SearchProgressValue = value.Percent;
+                SearchProgressText = $"{value.Stage} Найдено колец: {value.FoundLoops:N0}";
+            });
+
+            var loops = await tradeLoopFinder.FindAsync(
+                request,
+                universe,
+                marketOrders.Orders,
+                contrabandTypeIds,
+                progress);
+
+            TradeLoops.Clear();
+            foreach (var row in loops.Select(ToLoopRow))
+            {
+                TradeLoops.Add(row);
+            }
+
+            ApplyCurrentLoopSort();
+
+            Status = TradeLoops.Count == 0
+                ? "Подходящих торговых колец не найдено."
+                : $"Найдено торговых колец: {TradeLoops.Count:N0}";
             SearchProgressText = Status;
             SaveLastSearchState();
         }
@@ -344,20 +472,32 @@ public partial class MainWindowViewModel : ViewModelBase
             AccountingLevel = state.AccountingLevel;
             MinimumMargin = state.MinimumMargin;
             MinimumProfit = state.MinimumProfit;
+            MaxLoopStops = state.MaxLoopStops is >= 2 and <= 4 ? state.MaxLoopStops : 2;
             currentSortMemberPath = string.IsNullOrWhiteSpace(state.SortMemberPath) ? "Profit" : state.SortMemberPath;
             currentSortDescending = state.SortDescending;
+            currentLoopSortMemberPath = string.IsNullOrWhiteSpace(state.LoopSortMemberPath)
+                ? "ProfitPerJump"
+                : state.LoopSortMemberPath;
+            currentLoopSortDescending = state.LoopSortDescending;
 
             Opportunities.Clear();
-            foreach (var row in state.Opportunities)
+            foreach (var row in state.Opportunities ?? [])
             {
                 Opportunities.Add(row);
             }
 
+            TradeLoops.Clear();
+            foreach (var row in state.TradeLoops ?? [])
+            {
+                TradeLoops.Add(row);
+            }
+
             ApplyCurrentSort();
-            restoredLastSearch = Opportunities.Count > 0;
+            ApplyCurrentLoopSort();
+            restoredLastSearch = Opportunities.Count > 0 || TradeLoops.Count > 0;
             if (restoredLastSearch)
             {
-                Status = $"Восстановлен прошлый результат: {Opportunities.Count:N0} сделок.";
+                Status = $"Восстановлен прошлый результат: {Opportunities.Count:N0} сделок, {TradeLoops.Count:N0} колец.";
             }
         }
         catch
@@ -379,10 +519,14 @@ public partial class MainWindowViewModel : ViewModelBase
                 AccountingLevel,
                 MinimumMargin,
                 MinimumProfit,
+                MaxLoopStops,
                 currentSortMemberPath,
                 currentSortDescending,
+                currentLoopSortMemberPath,
+                currentLoopSortDescending,
                 DateTimeOffset.UtcNow,
-                Opportunities.ToList());
+                Opportunities.ToList(),
+                TradeLoops.ToList());
 
             using var stream = File.Create(GetLastSearchPath());
             JsonSerializer.Serialize(stream, state, json);
@@ -412,6 +556,11 @@ public partial class MainWindowViewModel : ViewModelBase
         };
     }
 
+    private static TradeLoopRow ToLoopRow(TradeLoop loop, int index)
+    {
+        return TradeLoopRow.FromTradeLoop(loop, index + 1);
+    }
+
     private void ApplyCurrentSort()
     {
         var sorted = currentSortDescending
@@ -422,6 +571,19 @@ public partial class MainWindowViewModel : ViewModelBase
         foreach (var (row, index) in sorted.Select((row, index) => (row, index + 1)))
         {
             Opportunities.Add(CopyWithNumber(row, index));
+        }
+    }
+
+    private void ApplyCurrentLoopSort()
+    {
+        var sorted = currentLoopSortDescending
+            ? TradeLoops.OrderByDescending(GetLoopSortValue).ToList()
+            : TradeLoops.OrderBy(GetLoopSortValue).ToList();
+
+        TradeLoops.Clear();
+        foreach (var (row, index) in sorted.Select((row, index) => (row, index + 1)))
+        {
+            TradeLoops.Add(CopyWithNumber(row, index));
         }
     }
 
@@ -460,6 +622,41 @@ public partial class MainWindowViewModel : ViewModelBase
             Profit = row.Profit,
             Margin = row.Margin,
             TotalVolume = row.TotalVolume
+        };
+    }
+
+    private object GetLoopSortValue(TradeLoopRow row)
+    {
+        return currentLoopSortMemberPath switch
+        {
+            nameof(TradeLoopRow.PathText) => row.PathText,
+            nameof(TradeLoopRow.ItemsText) => row.ItemsText,
+            nameof(TradeLoopRow.Jumps) => row.Jumps,
+            nameof(TradeLoopRow.PeakCost) => row.PeakCost,
+            nameof(TradeLoopRow.CargoVolume) => row.CargoVolume,
+            nameof(TradeLoopRow.Profit) => row.Profit,
+            nameof(TradeLoopRow.ProfitPerJump) => row.ProfitPerJump,
+            nameof(TradeLoopRow.Margin) => row.Margin,
+            _ => row.Number
+        };
+    }
+
+    private static TradeLoopRow CopyWithNumber(TradeLoopRow row, int number)
+    {
+        return new TradeLoopRow
+        {
+            Number = number,
+            Path = row.Path,
+            Items = row.Items,
+            Quantities = row.Quantities,
+            Jumps = row.Jumps,
+            PeakCost = row.PeakCost,
+            CargoVolume = row.CargoVolume,
+            Profit = row.Profit,
+            ProfitPerJump = row.ProfitPerJump,
+            Margin = row.Margin,
+            PathText = row.PathText,
+            ItemsText = row.ItemsText
         };
     }
 
@@ -575,7 +772,11 @@ public sealed record GuiSearchState(
     int AccountingLevel,
     double MinimumMargin,
     decimal MinimumProfit,
+    int MaxLoopStops,
     string SortMemberPath,
     bool SortDescending,
+    string LoopSortMemberPath,
+    bool LoopSortDescending,
     DateTimeOffset SavedAt,
-    List<TradeOpportunityRow> Opportunities);
+    List<TradeOpportunityRow>? Opportunities,
+    List<TradeLoopRow>? TradeLoops);
