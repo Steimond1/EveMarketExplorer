@@ -1,10 +1,10 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
-  <Package Name="EVE Market Route Finder"
-           Manufacturer="EveParser"
+  <Package Name="EVE Market Explorer"
+           Manufacturer="EVE Market Explorer"
            Version="1.0.0"
            UpgradeCode="8F81411C-8319-4CF7-B41D-2454AA5461B7"
            Scope="perUser">
-    <MajorUpgrade DowngradeErrorMessage="A newer version of EVE Market Route Finder is already installed." />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of EVE Market Explorer is already installed." />
     <MediaTemplate EmbedCab="yes" />
 
     <Icon Id="AppIcon" SourceFile="Assets\avalonia-logo.ico" />
@@ -12,20 +12,20 @@
 
     <StandardDirectory Id="LocalAppDataFolder">
       <Directory Id="ProgramsFolder" Name="Programs">
-        <Directory Id="INSTALLFOLDER" Name="EVE Market Route Finder" />
+        <Directory Id="INSTALLFOLDER" Name="EVE Market Explorer" />
       </Directory>
-      <Directory Id="CacheRootFolder" Name="EveMarketRouteFinder">
+      <Directory Id="CacheRootFolder" Name="EveMarketExplorer">
         <Directory Id="CacheFolder" Name="cache" />
       </Directory>
     </StandardDirectory>
 
     <StandardDirectory Id="ProgramMenuFolder">
-      <Directory Id="ApplicationProgramsFolder" Name="EVE Market Route Finder" />
+      <Directory Id="ApplicationProgramsFolder" Name="EVE Market Explorer" />
     </StandardDirectory>
 
     <StandardDirectory Id="DesktopFolder" />
 
-    <Feature Id="MainFeature" Title="EVE Market Route Finder" Level="1">
+    <Feature Id="MainFeature" Title="EVE Market Explorer" Level="1">
       <ComponentGroupRef Id="ApplicationComponents" />
       <ComponentRef Id="CacheDirectoryComponent" />
     </Feature>
@@ -35,17 +35,17 @@
     <ComponentGroup Id="ApplicationComponents" Directory="INSTALLFOLDER">
       <Component Id="ApplicationExecutable" Guid="0292C830-9062-4B41-A5C3-4948F9B0662F">
         <File Id="ApplicationExe"
-              Source="$(PublishDir)\EveParserAvalonia.exe"
+              Source="$(PublishDir)\EveMarketExplorer.exe"
               KeyPath="yes">
           <Shortcut Id="StartMenuShortcut"
                     Directory="ApplicationProgramsFolder"
-                    Name="EVE Market Route Finder"
+                    Name="EVE Market Explorer"
                     WorkingDirectory="INSTALLFOLDER"
                     Icon="AppIcon"
                     Advertise="no" />
           <Shortcut Id="DesktopShortcut"
                     Directory="DesktopFolder"
-                    Name="EVE Market Route Finder"
+                    Name="EVE Market Explorer"
                     WorkingDirectory="INSTALLFOLDER"
                     Icon="AppIcon"
                     Advertise="no" />
@@ -57,7 +57,7 @@
                       Directory="INSTALLFOLDER"
                       On="uninstall" />
         <RegistryValue Root="HKCU"
-                       Key="Software\EveParser\EveMarketRouteFinder"
+                       Key="Software\EveMarketExplorer"
                        Name="Installed"
                        Type="integer"
                        Value="1" />
@@ -71,7 +71,7 @@
                Guid="65FC213E-F976-41D0-AF5D-0AF48510E359">
       <CreateFolder />
       <RegistryValue Root="HKCU"
-                     Key="Software\EveParser\EveMarketRouteFinder"
+                     Key="Software\EveMarketExplorer"
                      Name="CacheDirectory"
                      Type="string"
                      Value="[CacheFolder]"

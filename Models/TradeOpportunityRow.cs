@@ -1,4 +1,4 @@
-namespace EveParserAvalonia.Models;
+namespace EveMarketExplorer.Models;
 
 public sealed class TradeOpportunityRow
 {

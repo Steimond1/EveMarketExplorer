@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using Avalonia.Data.Converters;
 
-namespace EveParserAvalonia.Converters;
+namespace EveMarketExplorer.Converters;
 
 public sealed class CompactNumberConverter : IValueConverter
 {

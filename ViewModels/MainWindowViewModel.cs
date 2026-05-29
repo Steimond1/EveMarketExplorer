@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using EveParserAvalonia.Models;
+using EveMarketExplorer.Models;
 
-namespace EveParserAvalonia.ViewModels;
+namespace EveMarketExplorer.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
@@ -102,13 +102,13 @@ public partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
         CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
-        Directory.CreateDirectory(GetCacheDirectory());
+        EnsureCacheDirectory();
 
         httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://esi.evetech.net/latest/")
         };
-        httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("EveParserAvalonia", "1.0"));
+        httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("EveMarketExplorer", "1.0"));
         httpClient.DefaultRequestHeaders.Add("X-Compatibility-Date", CompatibilityDate);
 
         cache = new EveCache(GetCacheDirectory(), json);
@@ -517,7 +517,35 @@ public partial class MainWindowViewModel : ViewModelBase
     private static string GetCacheDirectory()
     {
         var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        return Path.Combine(localAppData, "EveMarketExplorer", "cache");
+    }
+
+    private static string GetLegacyCacheDirectory()
+    {
+        var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         return Path.Combine(localAppData, "EveMarketRouteFinder", "cache");
+    }
+
+    private static void EnsureCacheDirectory()
+    {
+        var cacheDirectory = GetCacheDirectory();
+        Directory.CreateDirectory(cacheDirectory);
+
+        var legacyCacheDirectory = GetLegacyCacheDirectory();
+        if (!Directory.Exists(legacyCacheDirectory) ||
+            Directory.EnumerateFileSystemEntries(cacheDirectory).Any())
+        {
+            return;
+        }
+
+        foreach (var file in Directory.EnumerateFiles(legacyCacheDirectory))
+        {
+            var target = Path.Combine(cacheDirectory, Path.GetFileName(file));
+            if (!File.Exists(target))
+            {
+                File.Copy(file, target);
+            }
+        }
     }
 
     private static string GetLastSearchPath()

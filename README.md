@@ -1,4 +1,4 @@
-# EVE Market Route Finder
+# EVE Market Explorer
 
 The console prototype remains separate at:
 
@@ -30,17 +30,22 @@ The script creates a self-contained Windows x64 build in:
 artifacts\publish\win-x64
 ```
 
-If Inno Setup 6 is installed and `iscc.exe` is available in PATH, the same script
-also creates the installer:
+Standalone build:
 
 ```text
-artifacts\installer\EveMarketRouteFinderSetup.exe
+artifacts\standalone\EveMarketExplorerStandalone.exe
+```
+
+If Inno Setup 6 is installed, the same script also creates the installer:
+
+```text
+artifacts\installer\EveMarketExplorerSetup.exe
 ```
 
 If WiX Toolset CLI is installed, the same script also creates the MSI installer:
 
 ```text
-artifacts\msi\EveMarketRouteFinder.msi
+artifacts\msi\EveMarketExplorerSetup.msi
 ```
 
 Install WiX CLI:
@@ -52,5 +57,5 @@ dotnet tool install --global wix
 Runtime cache is stored per user in:
 
 ```text
-%LocalAppData%\EveMarketRouteFinder\cache
+%LocalAppData%\EveMarketExplorer\cache
 ```

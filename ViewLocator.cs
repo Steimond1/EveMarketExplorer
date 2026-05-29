@@ -2,9 +2,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using EveParserAvalonia.ViewModels;
+using EveMarketExplorer.ViewModels;
 
-namespace EveParserAvalonia;
+namespace EveMarketExplorer;
 
 /// <summary>
 /// Given a view model, returns the corresponding view if possible.

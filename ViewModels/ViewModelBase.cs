@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace EveParserAvalonia.ViewModels;
+namespace EveMarketExplorer.ViewModels;
 
 public abstract class ViewModelBase : ObservableObject
 {

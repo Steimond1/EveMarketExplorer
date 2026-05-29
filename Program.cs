@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using System;
 
-namespace EveParserAvalonia;
+namespace EveMarketExplorer;
 
 sealed class Program
 {

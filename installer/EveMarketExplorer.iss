@@ -1,7 +1,7 @@
-#define MyAppName "EVE Market Route Finder"
+#define MyAppName "EVE Market Explorer"
 #define MyAppVersion "1.0.0"
-#define MyAppPublisher "EveParser"
-#define MyAppExeName "EveParserAvalonia.exe"
+#define MyAppPublisher "EVE Market Explorer"
+#define MyAppExeName "EveMarketExplorer.exe"
 #define PublishDir "..\artifacts\publish\win-x64"
 
 [Setup]
@@ -13,7 +13,7 @@ DefaultDirName={localappdata}\Programs\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 OutputDir=..\artifacts\installer
-OutputBaseFilename=EveMarketRouteFinderSetup
+OutputBaseFilename=EveMarketExplorerSetup
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -34,7 +34,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "{#PublishDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Dirs]
-Name: "{localappdata}\EveMarketRouteFinder\cache"
+Name: "{localappdata}\EveMarketExplorer\cache"
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

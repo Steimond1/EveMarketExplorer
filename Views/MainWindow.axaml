@@ -1,15 +1,15 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:EveParserAvalonia.ViewModels"
-        xmlns:model="using:EveParserAvalonia.Models"
-        xmlns:conv="using:EveParserAvalonia.Converters"
+        xmlns:vm="using:EveMarketExplorer.ViewModels"
+        xmlns:model="using:EveMarketExplorer.Models"
+        xmlns:conv="using:EveMarketExplorer.Converters"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="1720" d:DesignHeight="820"
-        x:Class="EveParserAvalonia.Views.MainWindow"
+        x:Class="EveMarketExplorer.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="EVE Market Route Finder"
+        Title="EVE Market Explorer"
         Width="1865"
         Height="820"
         MinWidth="1440"
@@ -210,7 +210,7 @@
                                 </Grid>
                             </Border>
                             <StackPanel Spacing="0">
-                                <TextBlock Text="EVE Market Route Finder"
+                                <TextBlock Text="EVE Market Explorer"
                                            Foreground="{StaticResource AppTextBrush}"
                                            FontWeight="SemiBold"/>
                                 <TextBlock Text="торговые маршруты и прибыль"

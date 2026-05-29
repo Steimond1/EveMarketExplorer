@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
-using EveParserAvalonia.ViewModels;
+using EveMarketExplorer.ViewModels;
 
-namespace EveParserAvalonia.Views;
+namespace EveMarketExplorer.Views;
 
 public partial class MainWindow : Window
 {

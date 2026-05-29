@@ -4,10 +4,10 @@ using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
-using EveParserAvalonia.ViewModels;
-using EveParserAvalonia.Views;
+using EveMarketExplorer.ViewModels;
+using EveMarketExplorer.Views;
 
-namespace EveParserAvalonia;
+namespace EveMarketExplorer;
 
 public partial class App : Application
 {
