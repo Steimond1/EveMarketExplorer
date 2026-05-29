@@ -11,6 +11,8 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <AvaloniaResource Include="Assets\**" />
+    <Compile Remove="EveMarketExplorer.Tests\**\*.cs" />
+    <None Remove="EveMarketExplorer.Tests\**" />
   </ItemGroup>
 
   <ItemGroup>

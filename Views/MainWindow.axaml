@@ -275,8 +275,13 @@
                         <NumericUpDown Classes="short-input" Value="{Binding AccountingLevel}" Minimum="0" Maximum="5" Increment="1"/>
                     </StackPanel>
 
+                    <StackPanel Grid.Row="1" Grid.Column="3" Classes="form-field" IsVisible="{Binding IsTradeLoopsTabSelected}">
+                        <TextBlock Classes="form-label" Text="Loop points"/>
+                        <NumericUpDown Classes="short-input" Value="{Binding MaxLoopStops}" Minimum="2" Maximum="4" Increment="1"/>
+                    </StackPanel>
+
                     <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6" Orientation="Horizontal" Spacing="10">
-                        <Button Classes="primary-action" Content="Найти" Command="{Binding FindOpportunitiesCommand}" Padding="24,7"/>
+                        <Button Classes="primary-action" Content="Найти" Command="{Binding FindCommand}" Padding="24,7"/>
                         <Button Content="Обновить кэш" Command="{Binding RefreshCacheCommand}" Padding="16,7"/>
                     </StackPanel>
 
@@ -286,6 +291,7 @@
                                      Minimum="0"
                                      Maximum="100"
                                      Value="{Binding SearchProgressValue}"
+                                     IsIndeterminate="{Binding IsSearchRunning}"
                                      IsVisible="{Binding IsSearchRunning}"
                                      ToolTip.Tip="{Binding SearchProgressText}"/>
                         <TextBox Classes="status-line"
@@ -307,6 +313,8 @@
 
             <Border Padding="12"
                     Background="{StaticResource AppBackgroundBrush}">
+                <TabControl SelectedIndex="{Binding SelectedTabIndex}">
+                    <TabItem Header="Точка-Точка">
                 <DataGrid ItemsSource="{Binding Opportunities}"
                           x:Name="OpportunitiesGrid"
                           AutoGenerateColumns="False"
@@ -315,8 +323,6 @@
                           HeadersVisibility="Column"
                           Sorting="OpportunitiesGrid_Sorting">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="#" Binding="{Binding Number}" SortMemberPath="Number" Width="48"/>
-
                         <DataGridTemplateColumn Header="Товар" SortMemberPath="Name" Width="230">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate x:DataType="model:TradeOpportunityRow">
@@ -360,6 +366,75 @@
                         <DataGridTextColumn Header="Объем общий" Binding="{Binding TotalVolume, Converter={StaticResource CompactNumber}}" SortMemberPath="TotalVolume" Width="130"/>
                     </DataGrid.Columns>
                 </DataGrid>
+                    </TabItem>
+
+                    <TabItem Header="Кольцо">
+                        <DataGrid ItemsSource="{Binding TradeLoops}"
+                                  x:Name="LoopsGrid"
+                                  AutoGenerateColumns="False"
+                                  CanUserSortColumns="True"
+                                  IsReadOnly="True"
+                                  HeadersVisibility="Column"
+                                  Sorting="LoopsGrid_Sorting">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="Путь" SortMemberPath="PathText" Width="400">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="model:TradeLoopRow">
+                                            <ItemsControl ItemsSource="{Binding Path}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="model:TradeLoopCellLine">
+                                                        <DockPanel LastChildFill="True" Margin="0,1">
+                                                            <Button Classes="copy-button" DockPanel.Dock="Right" Content="⧉" Tag="{Binding Text}" Click="CopyButton_Click" ToolTip.Tip="Скопировать"/>
+                                                            <TextBlock Text="{Binding Text}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                                        </DockPanel>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn Header="Товар" SortMemberPath="ItemsText" Width="360">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="model:TradeLoopRow">
+                                            <ItemsControl ItemsSource="{Binding Items}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="model:TradeLoopCellLine">
+                                                        <DockPanel LastChildFill="True" Margin="0,1">
+                                                            <Button Classes="copy-button" DockPanel.Dock="Right" Content="⧉" Tag="{Binding Text}" Click="CopyButton_Click" ToolTip.Tip="Скопировать"/>
+                                                            <TextBlock Text="{Binding Text}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                                        </DockPanel>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn Header="Количество" Width="115">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="model:TradeLoopRow">
+                                            <ItemsControl ItemsSource="{Binding Quantities}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="model:TradeLoopCellLine">
+                                                        <TextBlock Text="{Binding Text}" Margin="0,5,0,6" TextAlignment="Right"/>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTextColumn Header="Прыжки" Binding="{Binding Jumps}" SortMemberPath="Jumps" Width="95"/>
+                                <DataGridTextColumn Header="Объем" Binding="{Binding CargoVolume, Converter={StaticResource CompactNumber}}" SortMemberPath="CargoVolume" Width="95"/>
+                                <DataGridTextColumn Header="ISK/прыжок" Binding="{Binding ProfitPerJump, Converter={StaticResource CompactNumber}}" SortMemberPath="ProfitPerJump" Width="120"/>
+                                <DataGridTextColumn Header="Профит" Binding="{Binding Profit, Converter={StaticResource CompactNumber}}" SortMemberPath="Profit" Width="110"/>
+                                <DataGridTextColumn Header="Маржа" Binding="{Binding Margin, StringFormat=P1}" SortMemberPath="Margin" Width="90"/>
+                                <DataGridTextColumn Header="Затраты" Binding="{Binding PeakCost, Converter={StaticResource CompactNumber}}" SortMemberPath="PeakCost" Width="110"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
+                </TabControl>
             </Border>
         </DockPanel>
 
