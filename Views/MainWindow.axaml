@@ -10,10 +10,11 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="EVE Market Route Finder"
-        Width="1825"
+        Width="1865"
         Height="820"
         MinWidth="1440"
-        MinHeight="640">
+        MinHeight="640"
+        Background="{StaticResource AppBackgroundBrush}">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
@@ -28,33 +29,197 @@
             <Setter Property="Width" Value="100"/>
             <Setter Property="TextAlignment" Value="Right"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="{StaticResource AppMutedTextBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
+
         <Style Selector="StackPanel.form-field">
             <Setter Property="Orientation" Value="Horizontal"/>
             <Setter Property="Spacing" Value="10"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
+
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="{StaticResource AppFieldBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource AppTextBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="SelectionBrush" Value="{StaticResource AppAccentDarkBrush}"/>
+        </Style>
+
+        <Style Selector="AutoCompleteBox">
+            <Setter Property="Background" Value="{StaticResource AppFieldBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource AppTextBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}"/>
+        </Style>
+
+        <Style Selector="NumericUpDown">
+            <Setter Property="Background" Value="{StaticResource AppFieldBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource AppTextBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}"/>
+            <Setter Property="CornerRadius" Value="5"/>
+        </Style>
+
+        <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement,
+                         AutoCompleteBox:pointerover /template/ Border#PART_BorderElement,
+                         NumericUpDown:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="{StaticResource AppBorderStrongBrush}"/>
+        </Style>
+
+        <Style Selector="TextBox:focus /template/ Border#PART_BorderElement,
+                         AutoCompleteBox:focus /template/ Border#PART_BorderElement,
+                         NumericUpDown:focus /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="{StaticResource AppAccentBrush}"/>
+        </Style>
+
         <Style Selector="NumericUpDown.wide-input">
             <Setter Property="Width" Value="230"/>
         </Style>
+
         <Style Selector="NumericUpDown.wide-input-2">
             <Setter Property="Width" Value="260"/>
         </Style>
+
         <Style Selector="NumericUpDown.medium-input">
             <Setter Property="Width" Value="190"/>
         </Style>
+
         <Style Selector="NumericUpDown.short-input">
             <Setter Property="Width" Value="120"/>
+        </Style>
+
+        <Style Selector="Button">
+            <Setter Property="Foreground" Value="{StaticResource AppTextBrush}"/>
+            <Setter Property="Background" Value="{StaticResource AppPanelRaisedBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <Style Selector="Button:pointerover">
+            <Setter Property="Background" Value="#1B2830"/>
+            <Setter Property="BorderBrush" Value="{StaticResource AppBorderStrongBrush}"/>
+        </Style>
+
+        <Style Selector="Button.primary-action">
+            <Setter Property="Background" Value="{StaticResource AppAccentDarkBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource AppAccentBrush}"/>
+        </Style>
+
+        <Style Selector="Button.primary-action:pointerover">
+            <Setter Property="Background" Value="#23937C"/>
+        </Style>
+
+        <Style Selector="Button.copy-button">
+            <Setter Property="Width" Value="24"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="8,0,0,0"/>
+            <Setter Property="Background" Value="#101A20"/>
+            <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource AppAccentBrush}"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style Selector="Button.copy-button:pointerover">
+            <Setter Property="Background" Value="#173027"/>
+            <Setter Property="BorderBrush" Value="{StaticResource AppAccentBrush}"/>
+        </Style>
+
+        <Style Selector="CheckBox">
+            <Setter Property="Foreground" Value="{StaticResource AppTextBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <Style Selector="ProgressBar">
+            <Setter Property="Background" Value="#10161B"/>
+            <Setter Property="Foreground" Value="{StaticResource AppAccentBrush}"/>
+        </Style>
+
+        <Style Selector="TextBox.status-line">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource AppMutedTextBrush}"/>
+        </Style>
+
+        <Style Selector="DataGrid">
+            <Setter Property="Background" Value="{StaticResource AppBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource AppTextBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#1D2830"/>
+            <Setter Property="VerticalGridLinesBrush" Value="#1D2830"/>
+        </Style>
+
+        <Style Selector="DataGridColumnHeader">
+            <Setter Property="Background" Value="#101820"/>
+            <Setter Property="Foreground" Value="#B9C8CF"/>
+            <Setter Property="BorderBrush" Value="#25313A"/>
+            <Setter Property="Padding" Value="5,4"/>
+            <Setter Property="MinHeight" Value="30"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <Style Selector="DataGridCell">
+            <Setter Property="Background" Value="{StaticResource AppBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource AppTextBrush}"/>
+            <Setter Property="BorderBrush" Value="#1D2830"/>
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="MinHeight" Value="31"/>
+        </Style>
+
+        <Style Selector="DataGridRow">
+            <Setter Property="MinHeight" Value="33"/>
+        </Style>
+
+        <Style Selector="DataGridRow:pointerover DataGridCell">
+            <Setter Property="Background" Value="#101A20"/>
         </Style>
     </Window.Styles>
 
     <Grid>
         <DockPanel>
-            <Border DockPanel.Dock="Top" Padding="12" Background="{DynamicResource SystemControlBackgroundAltHighBrush}">
+            <Border DockPanel.Dock="Top"
+                    Padding="14,12"
+                    Background="{StaticResource AppPanelBrush}"
+                    BorderBrush="{StaticResource AppBorderBrush}"
+                    BorderThickness="0,0,0,1">
                 <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
                       ColumnDefinitions="330,332,250,300,*,Auto"
-                      ColumnSpacing="15"
-                      RowSpacing="8">
+                      ColumnSpacing="18"
+                      RowSpacing="10">
+                    <Grid Grid.Row="0" Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                            <Border Width="34"
+                                    Height="34"
+                                    CornerRadius="8"
+                                    Background="#0A1014"
+                                    BorderBrush="{StaticResource AppAccentDarkBrush}"
+                                    BorderThickness="1">
+                                <Grid>
+                                    <Ellipse Width="18" Height="18" Stroke="{StaticResource AppAccentBrush}" StrokeThickness="1.5"/>
+                                    <Ellipse Width="5" Height="5" Fill="{StaticResource AppAmberBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,7,7"/>
+                                    <Path Data="M 9,22 L 25,10"
+                                          Stroke="{StaticResource AppAccentBrush}"
+                                          StrokeThickness="1.5"
+                                          StrokeLineCap="Round"/>
+                                </Grid>
+                            </Border>
+                            <StackPanel Spacing="0">
+                                <TextBlock Text="EVE Market Route Finder"
+                                           Foreground="{StaticResource AppTextBrush}"
+                                           FontWeight="SemiBold"/>
+                                <TextBlock Text="торговые маршруты и прибыль"
+                                           Foreground="{StaticResource AppMutedTextBrush}"
+                                           FontSize="11"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+
                     <StackPanel Grid.Row="0" Grid.Column="0" Classes="form-field">
                         <TextBlock Classes="form-label" Text="Система"/>
                         <AutoCompleteBox Width="260"
@@ -110,12 +275,12 @@
                         <NumericUpDown Classes="short-input" Value="{Binding AccountingLevel}" Minimum="0" Maximum="5" Increment="1"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6" Orientation="Horizontal" Spacing="8">
-                        <Button Content="Найти" Command="{Binding FindOpportunitiesCommand}" Padding="22,6"/>
-                        <Button Content="Обновить кэш" Command="{Binding RefreshCacheCommand}" Padding="14,6"/>
+                    <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6" Orientation="Horizontal" Spacing="10">
+                        <Button Classes="primary-action" Content="Найти" Command="{Binding FindOpportunitiesCommand}" Padding="24,7"/>
+                        <Button Content="Обновить кэш" Command="{Binding RefreshCacheCommand}" Padding="16,7"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="6" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="6" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
                         <ProgressBar Width="180"
                                      Height="8"
                                      Minimum="0"
@@ -123,104 +288,91 @@
                                      Value="{Binding SearchProgressValue}"
                                      IsVisible="{Binding IsSearchRunning}"
                                      ToolTip.Tip="{Binding SearchProgressText}"/>
-                        <TextBox Text="{Binding Status}"
+                        <TextBox Classes="status-line"
+                                 Text="{Binding Status}"
                                  IsReadOnly="True"
-                                 BorderThickness="0"
-                                 Background="Transparent"
-                                 Opacity="0.8"
                                  VerticalAlignment="Center"
-                                 MinWidth="520"/>
+                                 MinWidth="640"/>
                     </StackPanel>
 
                     <TextBlock Grid.Row="4"
                                Grid.Column="0"
                                Grid.ColumnSpan="6"
                                Text="{Binding LastResultWarning}"
-                               Foreground="IndianRed"
+                               Foreground="{StaticResource AppDangerBrush}"
                                FontWeight="SemiBold"
                                IsVisible="{Binding IsLastResultWarningVisible}"/>
                 </Grid>
             </Border>
 
-            <DataGrid ItemsSource="{Binding Opportunities}"
-                      x:Name="OpportunitiesGrid"
-                      AutoGenerateColumns="False"
-                      CanUserSortColumns="True"
-                      IsReadOnly="True"
-                      GridLinesVisibility="All"
-                      HeadersVisibility="Column"
-                      Sorting="OpportunitiesGrid_Sorting"
-                      Margin="12">
-                <DataGrid.Styles>
-                    <Style Selector="DataGridColumnHeader">
-                        <Setter Property="Padding" Value="1,2"/>
-                        <Setter Property="MinHeight" Value="26"/>
-                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                    </Style>
-                    <Style Selector="DataGridCell">
-                        <Setter Property="Padding" Value="2,1"/>
-                        <Setter Property="MinHeight" Value="26"/>
-                    </Style>
-                    <Style Selector="DataGridRow">
-                        <Setter Property="MinHeight" Value="28"/>
-                    </Style>
-                </DataGrid.Styles>
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="#" Binding="{Binding Number}" SortMemberPath="Number" Width="48"/>
+            <Border Padding="12"
+                    Background="{StaticResource AppBackgroundBrush}">
+                <DataGrid ItemsSource="{Binding Opportunities}"
+                          x:Name="OpportunitiesGrid"
+                          AutoGenerateColumns="False"
+                          CanUserSortColumns="True"
+                          IsReadOnly="True"
+                          HeadersVisibility="Column"
+                          Sorting="OpportunitiesGrid_Sorting">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="#" Binding="{Binding Number}" SortMemberPath="Number" Width="48"/>
 
-                    <DataGridTemplateColumn Header="Товар" SortMemberPath="Name" Width="230">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate x:DataType="model:TradeOpportunityRow">
-                                <DockPanel LastChildFill="True">
-                                    <Button DockPanel.Dock="Right" Content="⧉" Tag="{Binding Name}" Click="CopyButton_Click" Width="24" Height="24" Padding="0" ToolTip.Tip="Скопировать"/>
-                                    <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
-                                </DockPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Товар" SortMemberPath="Name" Width="230">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate x:DataType="model:TradeOpportunityRow">
+                                    <DockPanel LastChildFill="True">
+                                        <Button Classes="copy-button" DockPanel.Dock="Right" Content="⧉" Tag="{Binding Name}" Click="CopyButton_Click" ToolTip.Tip="Скопировать"/>
+                                        <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="Где покупаем" SortMemberPath="BuyLocation" Width="330">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate x:DataType="model:TradeOpportunityRow">
-                                <DockPanel LastChildFill="True">
-                                    <Button DockPanel.Dock="Right" Content="⧉" Tag="{Binding BuyLocation}" Click="CopyButton_Click" Width="24" Height="24" Padding="0" ToolTip.Tip="Скопировать"/>
-                                    <TextBlock Text="{Binding BuyLocation}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
-                                </DockPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Где покупаем" SortMemberPath="BuyLocation" Width="330">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate x:DataType="model:TradeOpportunityRow">
+                                    <DockPanel LastChildFill="True">
+                                        <Button Classes="copy-button" DockPanel.Dock="Right" Content="⧉" Tag="{Binding BuyLocation}" Click="CopyButton_Click" ToolTip.Tip="Скопировать"/>
+                                        <TextBlock Text="{Binding BuyLocation}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="Где продаем" SortMemberPath="SellLocation" Width="330">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate x:DataType="model:TradeOpportunityRow">
-                                <DockPanel LastChildFill="True">
-                                    <Button DockPanel.Dock="Right" Content="⧉" Tag="{Binding SellLocation}" Click="CopyButton_Click" Width="24" Height="24" Padding="0" ToolTip.Tip="Скопировать"/>
-                                    <TextBlock Text="{Binding SellLocation}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
-                                </DockPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Где продаем" SortMemberPath="SellLocation" Width="330">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate x:DataType="model:TradeOpportunityRow">
+                                    <DockPanel LastChildFill="True">
+                                        <Button Classes="copy-button" DockPanel.Dock="Right" Content="⧉" Tag="{Binding SellLocation}" Click="CopyButton_Click" ToolTip.Tip="Скопировать"/>
+                                        <TextBlock Text="{Binding SellLocation}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                    <DataGridTextColumn Header="Прыжки" Binding="{Binding Jumps}" SortMemberPath="Jumps" Width="85"/>
-                    <DataGridTextColumn Header="Цена покупки" Binding="{Binding BuyPrice, Converter={StaticResource CompactNumber}}" SortMemberPath="BuyPrice" Width="132"/>
-                    <DataGridTextColumn Header="Цена продажи" Binding="{Binding SellPrice, Converter={StaticResource CompactNumber}}" SortMemberPath="SellPrice" Width="132"/>
-                    <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity, Converter={StaticResource CompactNumber}}" SortMemberPath="Quantity" Width="82"/>
-                    <DataGridTextColumn Header="ISK/прыжок" Binding="{Binding ProfitPerJump, Converter={StaticResource CompactNumber}}" SortMemberPath="ProfitPerJump" Width="116"/>
-                    <DataGridTextColumn Header="Прибыль" Binding="{Binding Profit, Converter={StaticResource CompactNumber}}" SortMemberPath="Profit" Width="112"/>
-                    <DataGridTextColumn Header="Маржа" Binding="{Binding Margin, StringFormat=P1}" SortMemberPath="Margin" Width="82"/>
-                    <DataGridTextColumn Header="Объем общий" Binding="{Binding TotalVolume, Converter={StaticResource CompactNumber}}" SortMemberPath="TotalVolume" Width="120"/>
-                </DataGrid.Columns>
-            </DataGrid>
+                        <DataGridTextColumn Header="Прыжки" Binding="{Binding Jumps}" SortMemberPath="Jumps" Width="95"/>
+                        <DataGridTextColumn Header="Цена покупки" Binding="{Binding BuyPrice, Converter={StaticResource CompactNumber}}" SortMemberPath="BuyPrice" Width="132"/>
+                        <DataGridTextColumn Header="Цена продажи" Binding="{Binding SellPrice, Converter={StaticResource CompactNumber}}" SortMemberPath="SellPrice" Width="132"/>
+                        <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity, Converter={StaticResource CompactNumber}}" SortMemberPath="Quantity" Width="90"/>
+                        <DataGridTextColumn Header="ISK/прыжок" Binding="{Binding ProfitPerJump, Converter={StaticResource CompactNumber}}" SortMemberPath="ProfitPerJump" Width="116"/>
+                        <DataGridTextColumn Header="Прибыль" Binding="{Binding Profit, Converter={StaticResource CompactNumber}}" SortMemberPath="Profit" Width="112"/>
+                        <DataGridTextColumn Header="Маржа" Binding="{Binding Margin, StringFormat=P1}" SortMemberPath="Margin" Width="90"/>
+                        <DataGridTextColumn Header="Объем общий" Binding="{Binding TotalVolume, Converter={StaticResource CompactNumber}}" SortMemberPath="TotalVolume" Width="130"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
         </DockPanel>
 
         <Border HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                Margin="0,142,18,0"
+                Margin="0,150,20,0"
                 Padding="14,9"
                 CornerRadius="6"
-                Background="#20242A"
+                Background="#182027"
+                BorderBrush="{StaticResource AppAccentDarkBrush}"
+                BorderThickness="1"
                 IsVisible="{Binding IsToastVisible}">
-            <TextBlock Text="{Binding ToastMessage}" Foreground="White"/>
+            <TextBlock Text="{Binding ToastMessage}" Foreground="{StaticResource AppTextBrush}"/>
         </Border>
     </Grid>
 </Window>

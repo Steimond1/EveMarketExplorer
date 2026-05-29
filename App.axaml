@@ -2,13 +2,40 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="EveParserAvalonia.App"
              xmlns:local="using:EveParserAvalonia"
-             RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+             RequestedThemeVariant="Dark">
 
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
-  
+
+    <Application.Resources>
+        <Color x:Key="AppBackgroundColor">#070A0D</Color>
+        <Color x:Key="AppPanelColor">#0F151A</Color>
+        <Color x:Key="AppPanelRaisedColor">#141C22</Color>
+        <Color x:Key="AppFieldColor">#090D11</Color>
+        <Color x:Key="AppBorderColor">#25313A</Color>
+        <Color x:Key="AppBorderStrongColor">#3D4C56</Color>
+        <Color x:Key="AppAccentColor">#32D0AA</Color>
+        <Color x:Key="AppAccentDarkColor">#1D7F6C</Color>
+        <Color x:Key="AppAmberColor">#E0A84C</Color>
+        <Color x:Key="AppTextColor">#E9F1F4</Color>
+        <Color x:Key="AppMutedTextColor">#93A3AD</Color>
+        <Color x:Key="AppDangerColor">#F06B6B</Color>
+
+        <SolidColorBrush x:Key="AppBackgroundBrush" Color="{StaticResource AppBackgroundColor}"/>
+        <SolidColorBrush x:Key="AppPanelBrush" Color="{StaticResource AppPanelColor}"/>
+        <SolidColorBrush x:Key="AppPanelRaisedBrush" Color="{StaticResource AppPanelRaisedColor}"/>
+        <SolidColorBrush x:Key="AppFieldBrush" Color="{StaticResource AppFieldColor}"/>
+        <SolidColorBrush x:Key="AppBorderBrush" Color="{StaticResource AppBorderColor}"/>
+        <SolidColorBrush x:Key="AppBorderStrongBrush" Color="{StaticResource AppBorderStrongColor}"/>
+        <SolidColorBrush x:Key="AppAccentBrush" Color="{StaticResource AppAccentColor}"/>
+        <SolidColorBrush x:Key="AppAccentDarkBrush" Color="{StaticResource AppAccentDarkColor}"/>
+        <SolidColorBrush x:Key="AppAmberBrush" Color="{StaticResource AppAmberColor}"/>
+        <SolidColorBrush x:Key="AppTextBrush" Color="{StaticResource AppTextColor}"/>
+        <SolidColorBrush x:Key="AppMutedTextBrush" Color="{StaticResource AppMutedTextColor}"/>
+        <SolidColorBrush x:Key="AppDangerBrush" Color="{StaticResource AppDangerColor}"/>
+    </Application.Resources>
+
     <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
