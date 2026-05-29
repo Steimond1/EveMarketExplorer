@@ -71,53 +71,9 @@ The app also restores the last visible results on startup for both Trade Deals a
 
 ## Installation
 
-Use the MSI installer from the release artifacts:
+Download the latest MSI installer or standalone executable from GitHub Releases.
 
-```text
-artifacts\msi\EveMarketExplorerSetup.msi
-```
-
-There is also a standalone self-contained executable:
-
-```text
-artifacts\standalone\EveMarketExplorerStandalone.exe
-```
-
-The app installs per-user and does not require administrator rights.
-
-## Build From Source
-
-Requirements:
-
-- Windows x64
-- .NET 10 SDK
-- WiX CLI for MSI packaging
-
-Build the app:
-
-```powershell
-dotnet build
-```
-
-Run tests:
-
-```powershell
-dotnet run --project EveMarketExplorer.Tests\EveMarketExplorer.Tests.csproj
-```
-
-Create release artifacts:
-
-```powershell
-.\scripts\Build-Release.ps1
-```
-
-Release outputs:
-
-```text
-artifacts\publish\win-x64\EveMarketExplorer.exe
-artifacts\standalone\EveMarketExplorerStandalone.exe
-artifacts\msi\EveMarketExplorerSetup.msi
-```
+The installer is per-user and does not require administrator rights.
 
 ## Notes
 
