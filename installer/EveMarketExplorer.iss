@@ -1,5 +1,5 @@
 #define MyAppName "EVE Market Explorer"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.2"
 #define MyAppPublisher "EVE Market Explorer"
 #define MyAppExeName "EveMarketExplorer.exe"
 #define PublishDir "..\artifacts\publish\win-x64"

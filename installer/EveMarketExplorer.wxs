@@ -1,7 +1,7 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
   <Package Name="EVE Market Explorer"
            Manufacturer="EVE Market Explorer"
-           Version="1.0.0"
+           Version="1.0.2"
            UpgradeCode="8F81411C-8319-4CF7-B41D-2454AA5461B7"
            Scope="perUser">
     <MajorUpgrade DowngradeErrorMessage="A newer version of EVE Market Explorer is already installed." />

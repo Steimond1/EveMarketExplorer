@@ -25,6 +25,7 @@ dotnet publish (Join-Path $root 'EveMarketExplorer.csproj') `
     -p:IncludeNativeLibrariesForSelfExtract=true `
     -p:DebugType=None `
     -p:DebugSymbols=false `
+    -p:UsedAvaloniaProducts= `
     -o $publishDir
 
 Get-ChildItem $publishDir -Filter '*.pdb' -File | Remove-Item -Force
