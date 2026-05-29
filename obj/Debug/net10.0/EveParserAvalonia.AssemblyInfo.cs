@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EveParserAvalonia")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fcc4b62741d75b5893e2a2ba0e6235c1249b79c8")]
 [assembly: System.Reflection.AssemblyProductAttribute("EveParserAvalonia")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EveParserAvalonia")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

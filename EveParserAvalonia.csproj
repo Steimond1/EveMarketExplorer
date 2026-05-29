@@ -26,6 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EveParser\EveParser.Core\EveParser.Core.csproj" />
+    <Reference Include="EveParser.Core">
+      <HintPath>Libs\EveParser.Core.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
   </ItemGroup>
 </Project>

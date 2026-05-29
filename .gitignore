@@ -1,0 +1,20 @@
+# Build output
+bin/
+obj/
+
+# Local EVE caches and restored UI state
+cache/
+**/cache/
+avalonia-last-search.json
+market-orders.json
+universe.json
+types.json
+location-names.json
+contraband-type-ids.json
+route-cache.json
+
+# User/local IDE files
+.vs/
+.vscode/.vs/
+*.user
+*.suo

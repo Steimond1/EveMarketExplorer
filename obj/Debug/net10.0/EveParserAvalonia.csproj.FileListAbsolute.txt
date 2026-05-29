@@ -93,3 +93,4 @@ C:\Projects\EveParserAvalonia\obj\Debug\net10.0\EveParserAvalonia.genruntimeconf
 C:\Projects\EveParserAvalonia\obj\Debug\net10.0\ref\EveParserAvalonia.dll
 C:\Projects\EveParserAvalonia\bin\Debug\net10.0\EveParser.Core.dll
 C:\Projects\EveParserAvalonia\bin\Debug\net10.0\EveParser.Core.pdb
+C:\Projects\EveParserAvalonia\obj\Debug\net10.0\EveParserAvalonia.sourcelink.json

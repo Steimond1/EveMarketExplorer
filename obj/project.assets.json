@@ -708,16 +708,6 @@
             "related": ".xml"
           }
         }
-      },
-      "EveParser.Core/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "compile": {
-          "bin/placeholder/EveParser.Core.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/EveParser.Core.dll": {}
-        }
       }
     }
   },
@@ -1690,11 +1680,6 @@
         "tmds.dbus.protocol.0.92.0.nupkg.sha512",
         "tmds.dbus.protocol.nuspec"
       ]
-    },
-    "EveParser.Core/1.0.0": {
-      "type": "project",
-      "path": "../EveParser/EveParser.Core/EveParser.Core.csproj",
-      "msbuildProject": "../EveParser/EveParser.Core/EveParser.Core.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -1705,8 +1690,7 @@
       "Avalonia.Fonts.Inter >= 12.0.4",
       "Avalonia.Themes.Fluent >= 12.0.4",
       "AvaloniaUI.DiagnosticsSupport >= 2.2.1",
-      "CommunityToolkit.Mvvm >= 8.4.1",
-      "EveParser.Core >= 1.0.0"
+      "CommunityToolkit.Mvvm >= 8.4.1"
     ]
   },
   "packageFolders": {
@@ -1734,11 +1718,7 @@
         "net10.0": {
           "framework": "net10.0",
           "targetAlias": "net10.0",
-          "projectReferences": {
-            "C:\\Projects\\EveParser\\EveParser.Core\\EveParser.Core.csproj": {
-              "projectPath": "C:\\Projects\\EveParser\\EveParser.Core\\EveParser.Core.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {

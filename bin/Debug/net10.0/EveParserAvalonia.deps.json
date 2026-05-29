@@ -15,7 +15,7 @@
           "Avalonia.Themes.Fluent": "12.0.4",
           "AvaloniaUI.DiagnosticsSupport": "2.2.1",
           "CommunityToolkit.Mvvm": "8.4.1",
-          "EveParser.Core": "1.0.0"
+          "EveParser.Core": "1.0.0.0"
         },
         "runtime": {
           "EveParserAvalonia.dll": {}
@@ -549,7 +549,7 @@
           }
         }
       },
-      "EveParser.Core/1.0.0": {
+      "EveParser.Core/1.0.0.0": {
         "runtime": {
           "EveParser.Core.dll": {
             "assemblyVersion": "1.0.0.0",
@@ -768,8 +768,8 @@
       "path": "tmds.dbus.protocol/0.92.0",
       "hashPath": "tmds.dbus.protocol.0.92.0.nupkg.sha512"
     },
-    "EveParser.Core/1.0.0": {
-      "type": "project",
+    "EveParser.Core/1.0.0.0": {
+      "type": "reference",
       "serviceable": false,
       "sha512": ""
     }
