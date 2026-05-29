@@ -13,6 +13,5 @@ public sealed class TradeOpportunityRow
     public decimal ProfitPerJump { get; init; }
     public decimal Profit { get; init; }
     public double Margin { get; init; }
-    public double UnitVolume { get; init; }
     public double TotalVolume { get; init; }
 }

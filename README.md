@@ -1,6 +1,4 @@
-# EveParser Avalonia
-
-GUI prototype for the EVE market route finder.
+# EVE Market Route Finder
 
 The console prototype remains separate at:
 
@@ -20,12 +18,39 @@ Build:
 dotnet build
 ```
 
-Current state:
+Release publish:
 
-- Avalonia MVVM shell is created.
-- Search inputs are laid out as GUI controls.
-- Result table uses `DataGrid` with sortable columns.
-- Real market calculation is not connected yet; the table shows a sample row.
+```powershell
+.\scripts\Build-Release.ps1
+```
 
-Next step is to extract the reusable calculation/cache/ESI code from the console
-prototype into a shared core library, then wire this GUI to that library.
+The script creates a self-contained Windows x64 build in:
+
+```text
+artifacts\publish\win-x64
+```
+
+If Inno Setup 6 is installed and `iscc.exe` is available in PATH, the same script
+also creates the installer:
+
+```text
+artifacts\installer\EveMarketRouteFinderSetup.exe
+```
+
+If WiX Toolset CLI is installed, the same script also creates the MSI installer:
+
+```text
+artifacts\msi\EveMarketRouteFinder.msi
+```
+
+Install WiX CLI:
+
+```powershell
+dotnet tool install --global wix
+```
+
+Runtime cache is stored per user in:
+
+```text
+%LocalAppData%\EveMarketRouteFinder\cache
+```

@@ -1,0 +1,81 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="EVE Market Route Finder"
+           Manufacturer="EveParser"
+           Version="1.0.0"
+           UpgradeCode="8F81411C-8319-4CF7-B41D-2454AA5461B7"
+           Scope="perUser">
+    <MajorUpgrade DowngradeErrorMessage="A newer version of EVE Market Route Finder is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Icon Id="AppIcon" SourceFile="Assets\avalonia-logo.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon" />
+
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="ProgramsFolder" Name="Programs">
+        <Directory Id="INSTALLFOLDER" Name="EVE Market Route Finder" />
+      </Directory>
+      <Directory Id="CacheRootFolder" Name="EveMarketRouteFinder">
+        <Directory Id="CacheFolder" Name="cache" />
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="EVE Market Route Finder" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder" />
+
+    <Feature Id="MainFeature" Title="EVE Market Route Finder" Level="1">
+      <ComponentGroupRef Id="ApplicationComponents" />
+      <ComponentRef Id="CacheDirectoryComponent" />
+    </Feature>
+  </Package>
+
+  <Fragment>
+    <ComponentGroup Id="ApplicationComponents" Directory="INSTALLFOLDER">
+      <Component Id="ApplicationExecutable" Guid="0292C830-9062-4B41-A5C3-4948F9B0662F">
+        <File Id="ApplicationExe"
+              Source="$(PublishDir)\EveParserAvalonia.exe"
+              KeyPath="yes">
+          <Shortcut Id="StartMenuShortcut"
+                    Directory="ApplicationProgramsFolder"
+                    Name="EVE Market Route Finder"
+                    WorkingDirectory="INSTALLFOLDER"
+                    Icon="AppIcon"
+                    Advertise="no" />
+          <Shortcut Id="DesktopShortcut"
+                    Directory="DesktopFolder"
+                    Name="EVE Market Route Finder"
+                    WorkingDirectory="INSTALLFOLDER"
+                    Icon="AppIcon"
+                    Advertise="no" />
+        </File>
+        <RemoveFolder Id="RemoveApplicationProgramsFolder"
+                      Directory="ApplicationProgramsFolder"
+                      On="uninstall" />
+        <RemoveFolder Id="RemoveInstallFolder"
+                      Directory="INSTALLFOLDER"
+                      On="uninstall" />
+        <RegistryValue Root="HKCU"
+                       Key="Software\EveParser\EveMarketRouteFinder"
+                       Name="Installed"
+                       Type="integer"
+                       Value="1" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+
+  <Fragment>
+    <Component Id="CacheDirectoryComponent"
+               Directory="CacheFolder"
+               Guid="65FC213E-F976-41D0-AF5D-0AF48510E359">
+      <CreateFolder />
+      <RegistryValue Root="HKCU"
+                     Key="Software\EveParser\EveMarketRouteFinder"
+                     Name="CacheDirectory"
+                     Type="string"
+                     Value="[CacheFolder]"
+                     KeyPath="yes" />
+    </Component>
+  </Fragment>
+</Wix>

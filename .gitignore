@@ -1,6 +1,8 @@
 # Build output
 bin/
 obj/
+artifacts/
+*.pdb
 
 # Local EVE caches and restored UI state
 cache/

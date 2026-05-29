@@ -117,25 +117,17 @@ public partial class MainWindowViewModel : ViewModelBase
         opportunityFinder = new TradeOpportunityFinder(esi, cache);
         contraband = new ContrabandDataSource(httpClient, cache);
 
-        SystemNames = LoadSystemNames();
+        SystemNames = new ObservableCollection<string>(LoadSystemNames());
         Opportunities = [];
         RestoreLastSearchState();
         _ = InitializeAsync();
     }
 
-    public IReadOnlyList<string> SystemNames { get; }
+    public ObservableCollection<string> SystemNames { get; }
 
     public ObservableCollection<TradeOpportunityRow> Opportunities { get; }
 
     public TableSortState CurrentSortState => new(currentSortMemberPath, currentSortDescending);
-
-    public TableSortState SortBy(string sortMemberPath)
-    {
-        var sortState = RememberSortBy(sortMemberPath);
-        ApplyCurrentSort();
-        SaveLastSearchState();
-        return sortState;
-    }
 
     public TableSortState RememberSortBy(string sortMemberPath)
     {
@@ -166,6 +158,7 @@ public partial class MainWindowViewModel : ViewModelBase
             Status = "Готовлю данные для расчета...";
 
             universe ??= await marketData.LoadUniverseAsync();
+            UpdateSystemNames(universe);
             marketOrders ??= cacheRefreshTask is { IsCompletedSuccessfully: true }
                 ? cacheRefreshTask.Result
                 : await marketData.LoadMarketOrdersAsync(universe.Regions);
@@ -272,6 +265,7 @@ public partial class MainWindowViewModel : ViewModelBase
             Status = statusText;
 
             universe ??= await marketData.LoadUniverseAsync();
+            UpdateSystemNames(universe);
             var progress = new Progress<MarketRefreshProgress>(value =>
             {
                 CacheRefreshProgress =
@@ -414,7 +408,6 @@ public partial class MainWindowViewModel : ViewModelBase
             ProfitPerJump = opportunity.ProfitPerJump,
             Profit = opportunity.Profit,
             Margin = opportunity.Margin,
-            UnitVolume = opportunity.UnitVolume,
             TotalVolume = opportunity.TotalVolume
         };
     }
@@ -466,7 +459,6 @@ public partial class MainWindowViewModel : ViewModelBase
             ProfitPerJump = row.ProfitPerJump,
             Profit = row.Profit,
             Margin = row.Margin,
-            UnitVolume = row.UnitVolume,
             TotalVolume = row.TotalVolume
         };
     }
@@ -501,9 +493,31 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    private void UpdateSystemNames(UniverseData data)
+    {
+        var names = data.Systems
+            .Select(system => system.Name)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        if (names.Length == 0 || names.SequenceEqual(SystemNames, StringComparer.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        SystemNames.Clear();
+        foreach (var name in names)
+        {
+            SystemNames.Add(name);
+        }
+    }
+
     private static string GetCacheDirectory()
     {
-        return Path.Combine("C:", "Projects", "EveParser", "EveParser", "cache");
+        var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        return Path.Combine(localAppData, "EveMarketRouteFinder", "cache");
     }
 
     private static string GetLastSearchPath()
