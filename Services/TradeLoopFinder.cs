@@ -180,12 +180,18 @@ public sealed class TradeLoopFinder
                         break;
                     }
 
-                    var quantity = Math.Min(baseQuantity, buyOrder.VolumeRemain);
+                    var availableUnits = Math.Min(sellOrder.VolumeRemain, buyOrder.VolumeRemain);
+                    var quantity = CalculateSustainableQuantity(
+                        maxUnitsByMoney,
+                        maxUnitsByCargo,
+                        availableUnits,
+                        request.MinimumLoopRuns);
                     if (quantity <= 0)
                     {
                         continue;
                     }
 
+                    var availableRuns = CalculateAvailableRuns(availableUnits, quantity);
                     var profit = (netSellPrice - sellOrder.Price) * quantity;
                     var cost = sellOrder.Price * quantity;
                     legs.Add(new TradeLoopLeg(
@@ -201,6 +207,7 @@ public sealed class TradeLoopFinder
                         quantity,
                         type.Volume,
                         type.Volume * quantity,
+                        availableRuns,
                         cost,
                         profit,
                         (double)((netSellPrice - sellOrder.Price) / sellOrder.Price)));
@@ -209,6 +216,26 @@ public sealed class TradeLoopFinder
         }
 
         return legs;
+    }
+
+    public static int CalculateSustainableQuantity(
+        int maxUnitsByMoney,
+        int maxUnitsByCargo,
+        int availableUnits,
+        int minimumLoopRuns)
+    {
+        if (minimumLoopRuns <= 0)
+        {
+            minimumLoopRuns = 1;
+        }
+
+        var maxUnitsByRepeatability = availableUnits / minimumLoopRuns;
+        return Math.Min(maxUnitsByMoney, Math.Min(maxUnitsByCargo, maxUnitsByRepeatability));
+    }
+
+    public static int CalculateAvailableRuns(int availableUnits, int quantity)
+    {
+        return quantity <= 0 ? 0 : availableUnits / quantity;
     }
 
     private static List<int> GetStartSystems(
@@ -335,7 +362,13 @@ public sealed class TradeLoopFinder
 
         var profit = legs.Sum(leg => leg.Profit);
         var requiredIsk = legs.Max(leg => leg.Cost);
+        var availableRuns = legs.Min(leg => leg.AvailableRuns);
         if (profit < request.MinimumProfit || requiredIsk > request.Budget)
+        {
+            return null;
+        }
+
+        if (availableRuns < request.MinimumLoopRuns)
         {
             return null;
         }
@@ -358,6 +391,7 @@ public sealed class TradeLoopFinder
             legs.ToList(),
             routeNames,
             jumps,
+            availableRuns,
             requiredIsk,
             legs.Max(leg => leg.TotalVolume),
             profit,
@@ -709,6 +743,7 @@ public sealed class TradeLoopFinder
         int Quantity,
         double UnitVolume,
         double TotalVolume,
+        int AvailableRuns,
         decimal Cost,
         decimal Profit,
         double Margin)
@@ -739,6 +774,7 @@ public sealed class TradeLoopFinder
                 Quantity,
                 UnitVolume,
                 TotalVolume,
+                AvailableRuns,
                 Cost,
                 Profit,
                 Margin);
@@ -749,6 +785,7 @@ public sealed class TradeLoopFinder
         List<TradeLoopLeg> Legs,
         List<string> Route,
         int Jumps,
+        int AvailableRuns,
         decimal RequiredIsk,
         double CargoVolume,
         decimal Profit,
@@ -761,6 +798,7 @@ public sealed class TradeLoopFinder
                 Legs.Select(leg => leg.WithDisplayNames(universe, locationNames)).ToList(),
                 Route,
                 Jumps,
+                AvailableRuns,
                 RequiredIsk,
                 CargoVolume,
                 Profit,
@@ -779,7 +817,8 @@ public sealed record TradeLoopSearchRequest(
     int AccountingLevel,
     double MinimumMarginPercent,
     decimal MinimumProfit,
-    int MaxStops);
+    int MaxStops,
+    int MinimumLoopRuns);
 
 public sealed record TradeLoopSearchProgress(string Stage, double Percent, int FoundLoops);
 
@@ -803,6 +842,7 @@ public sealed record DisplayTradeLoopLeg(
     int Quantity,
     double UnitVolume,
     double TotalVolume,
+    int AvailableRuns,
     decimal Cost,
     decimal Profit,
     double Margin);
@@ -811,6 +851,7 @@ public sealed record TradeLoop(
     List<DisplayTradeLoopLeg> DisplayLegs,
     List<string> Route,
     int Jumps,
+    int AvailableRuns,
     decimal RequiredIsk,
     double CargoVolume,
     decimal Profit,

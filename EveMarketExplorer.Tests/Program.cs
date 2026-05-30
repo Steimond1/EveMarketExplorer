@@ -24,6 +24,7 @@ tests.Add("trade loop row exposes per-loop totals and peak cost", () =>
     var row = TradeLoopRow.FromTradeLoop(loop, 1);
 
     Assert.Equal(18, row.Jumps);
+    Assert.Equal(6, row.AvailableRuns);
     Assert.Equal(1_250_000m, row.PeakCost);
     Assert.Equal(12_000d, row.CargoVolume);
     Assert.Equal(450_000m, row.Profit);
@@ -73,6 +74,30 @@ tests.Add("trade loop route cache entry round-trips timestamp and blocked route"
     }
 });
 
+tests.Add("sustainable loop quantity reserves enough order volume for requested runs", () =>
+{
+    var quantity = TradeLoopFinder.CalculateSustainableQuantity(
+        maxUnitsByMoney: 1_000,
+        maxUnitsByCargo: 1_000,
+        availableUnits: 1_000,
+        minimumLoopRuns: 4);
+
+    Assert.Equal(250, quantity);
+    Assert.Equal(4, TradeLoopFinder.CalculateAvailableRuns(1_000, quantity));
+});
+
+tests.Add("sustainable loop quantity still respects isk and cargo caps", () =>
+{
+    var quantity = TradeLoopFinder.CalculateSustainableQuantity(
+        maxUnitsByMoney: 80,
+        maxUnitsByCargo: 60,
+        availableUnits: 1_000,
+        minimumLoopRuns: 4);
+
+    Assert.Equal(60, quantity);
+    Assert.Equal(16, TradeLoopFinder.CalculateAvailableRuns(1_000, quantity));
+});
+
 tests.Add("gui search state round-trips trade loop rows", () =>
 {
     var row = TradeLoopRow.FromTradeLoop(SampleLoop(), 1);
@@ -86,6 +111,7 @@ tests.Add("gui search state round-trips trade loop rows", () =>
         10d,
         1_000_000m,
         4,
+        5,
         "Profit",
         true,
         "PeakCost",
@@ -99,6 +125,7 @@ tests.Add("gui search state round-trips trade loop rows", () =>
 
     Assert.NotNull(restored);
     Assert.Equal(1, restored!.TradeLoops!.Count);
+    Assert.Equal(5, restored.MinimumLoopRuns);
     Assert.Equal("PeakCost", restored.LoopSortMemberPath);
     Assert.SequenceEqual(row.Path.Select(line => line.Text), restored.TradeLoops[0].Path.Select(line => line.Text));
 });
@@ -109,12 +136,13 @@ static TradeLoop SampleLoop()
 {
     return new TradeLoop(
         [
-            new DisplayTradeLoopLeg(34, "Tritanium", "Jita", "Jita IV - Moon 4", "Amarr", "Amarr VIII", 5m, 6m, 5.8m, 10_000, 0.01, 100, 50_000m, 8_000m, 0.16),
-            new DisplayTradeLoopLeg(36, "Mexallon", "Amarr", "Amarr VIII", "Dodixie", "Dodixie IX", 300m, 390m, 370m, 2_500, 0.01, 25, 750_000m, 175_000m, 0.23),
-            new DisplayTradeLoopLeg(35, "Pyerite", "Dodixie", "Dodixie IX", "Jita", "Jita IV - Moon 4", 1_388.8889m, 1_700m, 1_685m, 900, 0.01, 9, 1_250_000m, 267_000m, 0.21)
+            new DisplayTradeLoopLeg(34, "Tritanium", "Jita", "Jita IV - Moon 4", "Amarr", "Amarr VIII", 5m, 6m, 5.8m, 10_000, 0.01, 100, 10, 50_000m, 8_000m, 0.16),
+            new DisplayTradeLoopLeg(36, "Mexallon", "Amarr", "Amarr VIII", "Dodixie", "Dodixie IX", 300m, 390m, 370m, 2_500, 0.01, 25, 6, 750_000m, 175_000m, 0.23),
+            new DisplayTradeLoopLeg(35, "Pyerite", "Dodixie", "Dodixie IX", "Jita", "Jita IV - Moon 4", 1_388.8889m, 1_700m, 1_685m, 900, 0.01, 9, 12, 1_250_000m, 267_000m, 0.21)
         ],
         ["Jita", "Amarr", "Dodixie", "Jita"],
         18,
+        6,
         1_250_000m,
         12_000d,
         450_000m,

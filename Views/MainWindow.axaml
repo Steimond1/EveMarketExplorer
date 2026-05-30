@@ -280,6 +280,11 @@
                         <NumericUpDown Classes="short-input" Value="{Binding MaxLoopStops}" Minimum="2" Maximum="4" Increment="1"/>
                     </StackPanel>
 
+                    <StackPanel Grid.Row="1" Grid.Column="4" Classes="form-field" IsVisible="{Binding IsTradeLoopsTabSelected}">
+                        <TextBlock Classes="form-label" Text="Мин. кругов"/>
+                        <NumericUpDown Classes="short-input" Value="{Binding MinimumLoopRuns}" Minimum="1" Increment="1"/>
+                    </StackPanel>
+
                     <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6" Orientation="Horizontal" Spacing="10">
                         <Button Classes="primary-action" Content="Найти" Command="{Binding FindCommand}" Padding="24,7"/>
                         <Button Content="Обновить кэш" Command="{Binding RefreshCacheCommand}" Padding="16,7"/>
@@ -425,6 +430,7 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
+                                <DataGridTextColumn Header="Кругов" Binding="{Binding AvailableRuns}" SortMemberPath="AvailableRuns" Width="85"/>
                                 <DataGridTextColumn Header="Прыжки" Binding="{Binding Jumps}" SortMemberPath="Jumps" Width="95"/>
                                 <DataGridTextColumn Header="Объем" Binding="{Binding CargoVolume, Converter={StaticResource CompactNumber}}" SortMemberPath="CargoVolume" Width="95"/>
                                 <DataGridTextColumn Header="ISK/прыжок" Binding="{Binding ProfitPerJump, Converter={StaticResource CompactNumber}}" SortMemberPath="ProfitPerJump" Width="120"/>

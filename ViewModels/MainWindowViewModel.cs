@@ -72,6 +72,9 @@ public partial class MainWindowViewModel : ViewModelBase
     private int maxLoopStops = 2;
 
     [ObservableProperty]
+    private int minimumLoopRuns = 3;
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsTradeLoopsTabSelected))]
     private int selectedTabIndex;
 
@@ -316,7 +319,8 @@ public partial class MainWindowViewModel : ViewModelBase
                 AccountingLevel,
                 MinimumMargin,
                 MinimumProfit,
-                Math.Clamp(MaxLoopStops, 2, 4));
+                Math.Clamp(MaxLoopStops, 2, 4),
+                Math.Max(1, MinimumLoopRuns));
 
             var progress = new Progress<TradeLoopSearchProgress>(value =>
             {
@@ -473,6 +477,7 @@ public partial class MainWindowViewModel : ViewModelBase
             MinimumMargin = state.MinimumMargin;
             MinimumProfit = state.MinimumProfit;
             MaxLoopStops = state.MaxLoopStops is >= 2 and <= 4 ? state.MaxLoopStops : 2;
+            MinimumLoopRuns = state.MinimumLoopRuns > 0 ? state.MinimumLoopRuns : 3;
             currentSortMemberPath = string.IsNullOrWhiteSpace(state.SortMemberPath) ? "Profit" : state.SortMemberPath;
             currentSortDescending = state.SortDescending;
             currentLoopSortMemberPath = string.IsNullOrWhiteSpace(state.LoopSortMemberPath)
@@ -520,6 +525,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 MinimumMargin,
                 MinimumProfit,
                 MaxLoopStops,
+                MinimumLoopRuns,
                 currentSortMemberPath,
                 currentSortDescending,
                 currentLoopSortMemberPath,
@@ -631,6 +637,7 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             nameof(TradeLoopRow.PathText) => row.PathText,
             nameof(TradeLoopRow.ItemsText) => row.ItemsText,
+            nameof(TradeLoopRow.AvailableRuns) => row.AvailableRuns,
             nameof(TradeLoopRow.Jumps) => row.Jumps,
             nameof(TradeLoopRow.PeakCost) => row.PeakCost,
             nameof(TradeLoopRow.CargoVolume) => row.CargoVolume,
@@ -649,6 +656,7 @@ public partial class MainWindowViewModel : ViewModelBase
             Path = row.Path,
             Items = row.Items,
             Quantities = row.Quantities,
+            AvailableRuns = row.AvailableRuns,
             Jumps = row.Jumps,
             PeakCost = row.PeakCost,
             CargoVolume = row.CargoVolume,
@@ -773,6 +781,7 @@ public sealed record GuiSearchState(
     double MinimumMargin,
     decimal MinimumProfit,
     int MaxLoopStops,
+    int MinimumLoopRuns,
     string SortMemberPath,
     bool SortDescending,
     string LoopSortMemberPath,

@@ -11,6 +11,7 @@ public sealed class TradeLoopRow
     public IReadOnlyList<TradeLoopCellLine> Path { get; init; } = [];
     public IReadOnlyList<TradeLoopCellLine> Items { get; init; } = [];
     public IReadOnlyList<TradeLoopCellLine> Quantities { get; init; } = [];
+    public int AvailableRuns { get; init; }
     public int Jumps { get; init; }
     public decimal PeakCost { get; init; }
     public double CargoVolume { get; init; }
@@ -38,6 +39,7 @@ public sealed class TradeLoopRow
             Path = path,
             Items = items,
             Quantities = quantities,
+            AvailableRuns = loop.AvailableRuns,
             Jumps = loop.Jumps,
             PeakCost = loop.RequiredIsk,
             CargoVolume = loop.CargoVolume,
